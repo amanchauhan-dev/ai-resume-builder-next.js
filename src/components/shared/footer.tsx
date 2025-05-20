@@ -18,18 +18,23 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { ProgressBarLink } from "@/providers/progress-bar-provider"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 export default function Footer() {
     const { setTheme } = useTheme()
+    const path = usePathname()
     return (
-        <footer className="bg-background border-t mt-auto">
+        <footer className={cn("bg-background border-t mt-auto", {
+            "hidden": path == '/builder'
+        })}>
             <div className="container px-4 py-12 md:py-16">
                 <div className="grid grid-cols-1 items-center md:grid-cols-4 gap-8">
                     {/* Brand Info */}
                     <div className="space-y-4 md:mx-auto">
                         <div className="flex items-center space-x-2">
                             <Home className="h-6 w-6 text-primary" />
-                            <span className="text-lg font-bold">ResumeCraft</span>
+                            <span className="text-lg font-bold">{process.env.NEXT_PUBLIC_APP_NAME || "ResumeBuilder"}</span>
                         </div>
                         <p className="text-sm text-muted-foreground">
                             Build professional resumes in minutes. Free forever.

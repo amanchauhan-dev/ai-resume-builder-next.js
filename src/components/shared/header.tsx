@@ -1,24 +1,25 @@
+'use client'
 import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DownloadIcon, FileTextIcon, RocketIcon, Settings, User, WandSparkles } from "lucide-react"
+
+import { DownloadIcon, FileTextIcon, LogIn, RocketIcon, User, WandSparkles } from "lucide-react"
 import { ModeToggle } from "../toggle-theme"
 import { ProgressBarLink } from "@/providers/progress-bar-provider"
+import { SignInButton, useAuth, UserButton } from "@clerk/nextjs"
+import { useEffect } from "react"
 
 export default function Header() {
+    const { userId } = useAuth()
+    useEffect(() => {
+        console.log(userId);
+    }, [userId])
     return (
         <header className="px-4 md:px-16 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center justify-between">
+            <div className="container flex h-[55px] items-center justify-between">
                 {/* Logo and Main Navigation */}
                 <div className="flex items-center space-x-6">
                     <ProgressBarLink href="/" className="flex items-center space-x-2">
                         <RocketIcon className="h-6 w-6 text-primary" />
-                        <span className="text-lg font-bold inline-block">ResumeCraft</span>
+                        <span className="text-lg font-bold inline-block">{process.env.NEXT_PUBLIC_APP_NAME || "ResumeBuilder"}</span>
                     </ProgressBarLink>
                 </div>
                 {/* Right Side Actions */}
@@ -42,30 +43,24 @@ export default function Header() {
                         Export PDF
                     </Button>
                     <ModeToggle />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src="/avatars/01.png" alt="John Does" />
-                                    <AvatarFallback>JD</AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56" align="end" forceMount>
-                            <DropdownMenuItem className="flex items-center">
-                                <User className="mr-2 h-4 w-4" />
-                                Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-center">
-                                <FileTextIcon className="mr-2 h-4 w-4" />
-                                My Resumes
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-center">
-                                <Settings className="mr-2 h-4 w-4" />
-                                Settings
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <UserButton
+                        appearance={{
+                            elements: {
+                                avatarBox: {
+                                    width: 24,
+                                    height: 24,
+                                },
+                                cardBox: {
+                                    width: 54
+                                }
+                            },
+                        }}
+                    ></UserButton>
+                    {
+                        userId && userId.length > 0 ? null : <SignInButton>
+                            <Button size={'sm'}>Sign in <LogIn /></Button>
+                        </SignInButton>
+                    }
                 </div>
             </div>
         </header>

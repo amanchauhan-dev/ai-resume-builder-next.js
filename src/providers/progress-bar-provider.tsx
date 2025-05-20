@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import {
   AnimatePresence,
   motion,
@@ -7,7 +8,7 @@ import {
   useSpring,
 } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ComponentProps,
   ReactNode,
@@ -62,10 +63,12 @@ export function ProgressBar({
 export function ProgressBarLink({
   href,
   children,
+  className,
   ...rest
 }: ComponentProps<typeof Link>) {
   const progress = useProgressBar();
   const router = useRouter();
+  const path = usePathname()
   return (
     <Link
       href={href}
@@ -77,6 +80,9 @@ export function ProgressBarLink({
           progress.done();
         });
       }}
+      className={cn(className, {
+        "text-primary": path == href
+      })}
       {...rest}
     >
       {children}
@@ -127,7 +133,7 @@ function useProgress() {
       value.set(100);
     }
 
-    return value.on("change", (latest:any) => {
+    return value.on("change", (latest: any) => {
       if (latest === 100) {
         setState("complete");
       }
