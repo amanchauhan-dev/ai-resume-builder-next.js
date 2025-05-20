@@ -3,9 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 
-// import Footer from "@/components/shared/footer";
 import { ProgressBar } from "@/providers/progress-bar-provider";
-import { ReactNode } from "react";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
@@ -58,12 +56,3 @@ export default function RootLayout({
 
 
 
-export const Div: React.FC<{ children?: ReactNode, className?: string }> = ({ children, className }) => {
-  return (
-    <div
-      className={`px-4 md:px-16 ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
