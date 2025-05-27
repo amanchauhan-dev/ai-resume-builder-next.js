@@ -25,6 +25,9 @@ export default function Header() {
                 {/* Right Side Actions */}
                 <div className="flex items-center space-x-4">
                     <nav className="hidden lg:flex items-center space-x-6">
+                        <ProgressBarLink href="/" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
+                            My Resumes
+                        </ProgressBarLink>
                         <ProgressBarLink href="/builder" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                             <WandSparkles className="mr-1 h-4 w-4" />
                             Builder

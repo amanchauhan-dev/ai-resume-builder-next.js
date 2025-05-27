@@ -1,5 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button"
+import { useResume } from "@/hooks/use-resume"
 import { cn } from "@/lib/utils"
 import { ProgressBarLink } from "@/providers/progress-bar-provider"
 import { ChevronDown, ChevronUp } from "lucide-react"
@@ -23,7 +24,7 @@ export const BuilderHeader = () => {
         }
         window.history.replaceState(null, "", "?" + newSearchParams.toString())
     }
-    
+
     return (
         <div className="relative border-b">
             <div className={cn("h-20 md:h-12 overflow-hidden transition-all flex items-center justify-center", {
@@ -60,8 +61,9 @@ export const BuilderHeader = () => {
 }
 
 export const BuilderFooter = () => {
+    const { loading, save } = useResume()
     return (
-        <footer className="w-full border-t px-3 py-4">
+        <footer className="w-full border-t px-3 py-4 bg-background z-30">
             <div className="max-w-7xl mx-auto flex flex-warp justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <Button size={'sm'} variant={'secondary'}>Previous</Button>
@@ -71,7 +73,9 @@ export const BuilderFooter = () => {
                     <Button size={'sm'} variant={'secondary'} asChild>
                         <ProgressBarLink href={'/'}>Close</ProgressBarLink>
                     </Button>
-                    <p className="text-muted-foreground opacity-0">Saving...</p>
+                    <Button disabled={loading} onClick={save}>
+                        {loading ? "Saving..." : 'SAVE'}
+                    </Button>
                 </div>
             </div>
         </footer>

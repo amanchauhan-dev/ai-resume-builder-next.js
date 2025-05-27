@@ -88,19 +88,19 @@ export default function Footer() {
                         <h3 className="text-sm font-semibold">Support</h3>
                         <ul className="space-y-2">
                             <li>
-                                <ProgressBarLink href="/help" className="text-sm text-muted-foreground hover:text-primary flex items-center">
+                                <ProgressBarLink href="/help-center" className="text-sm text-muted-foreground hover:text-primary flex items-center">
                                     <HelpCircle className="mr-2 h-4 w-4" />
                                     Help Center
                                 </ProgressBarLink>
                             </li>
                             <li>
-                                <ProgressBarLink href="/contact" className="text-sm text-muted-foreground hover:text-primary flex items-center">
+                                <ProgressBarLink href="/contact-us" className="text-sm text-muted-foreground hover:text-primary flex items-center">
                                     <Mail className="mr-2 h-4 w-4" />
                                     Contact Us
                                 </ProgressBarLink>
                             </li>
                             <li>
-                                <ProgressBarLink href="/privacy" className="text-sm text-muted-foreground hover:text-primary flex items-center">
+                                <ProgressBarLink href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary flex items-center">
                                     <ShieldCheck className="mr-2 h-4 w-4" />
                                     Privacy Policy
                                 </ProgressBarLink>

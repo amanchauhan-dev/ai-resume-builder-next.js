@@ -1,89 +1,47 @@
-import React, { Fragment } from 'react'
+'use client'
+import { useSearchParams } from 'next/navigation'
 import { BuilderFooter, BuilderHeader } from './builder-components'
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbList,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable"
-import PersonalInfoForm from './forms/personal-info-form'
-import { cn } from '@/lib/utils'
-import { formSteps } from './form-steps'
-
-
+import BuilderContent from './builder-content'
+import { ResumeProvider } from '@/providers/resume-provider'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import { useState } from 'react'
+import { CreateNewResume } from './actions'
+import Loading from '@/components/loader'
+import { useAuth } from '@clerk/nextjs'
 
 export default function ResumeBuilder() {
-    // const [formStep, setFormStep] = useState('')
-    return (
-        <>
-            <BuilderHeader />
-            <BuilderContent />
-            <BuilderFooter />
-        </>
-    )
+    const [createLoader, setCreateLoader] = useState(false);
+    const { userId } = useAuth()
+    const params = useSearchParams();
+    const resumeId = params.get('resumeId');
+    if (resumeId === null || resumeId === undefined || resumeId === '') {
+        const createNewResume = async () => {
+            setCreateLoader(true);
+            const response = await CreateNewResume({ userId: userId || '' });
+            console.log("🚀 New resume creation response:", response);
+            setCreateLoader(false);
+        }
+        return (
+            <div className="flex flex-col items-center justify-center h-full mt-10">
+                <Button onClick={createNewResume} disabled={createLoader}>
+                    {createLoader ? <Loading /> :
+                        <>
+                            <Plus /> Create New Resume
+                        </>
+                    }
+                </Button>
+            </div>
+        )
+    }
+    else
+        return (
+            <ResumeProvider>
+                <BuilderHeader />
+                <BuilderContent />
+                <BuilderFooter />
+            </ResumeProvider>
+        )
 }
 
 
-
-export const BuilderContent = () => {
-    return (
-        <main className="relative grow">
-            <ResizablePanelGroup
-                direction="horizontal"
-                className="absolute bottom-0 top-0 flex w-full"
-            >
-                <ResizablePanel defaultSize={400} className="border-r min-w-[400px] flex-auto">
-                    <NavigationThroughForms />
-                    {/* <GeneralResumeDetailForm /> */}
-                    <PersonalInfoForm />
-                </ResizablePanel>
-                <ResizableHandle className="max-md:hidden" />
-                <ResizablePanel className="max-md:hidden flex-auto bg-secondary py-5  min-w-[400px]" defaultSize={400}>
-                    <div className="bg-white  border shadow-xl w-full max-w-96 h-full mx-auto relative">
-                        <p className="absolute -top-[16px] left-0 text-secondary-foreground text-[10px]">My-Resume</p>
-                    </div>
-                </ResizablePanel>
-            </ResizablePanelGroup>
-        </main>
-    )
-}
-
-
-
-
-const NavigationThroughForms = () => {
-    const active = "General"
-    return (
-        <Breadcrumb className="p-2 mt-3 mx-auto w-fit">
-            <BreadcrumbList className='flex justify-center items-center'>
-                <BreadcrumbList>
-                    <BreadcrumbItem className={cn("mx-auto cursor-pointer", {
-                        "text-primary": "General" == active
-                    })}>
-                        General
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="" />
-                </BreadcrumbList>
-                {
-                    formSteps.map(item => {
-                        return (
-                            <Fragment key={item.id}>
-                                <BreadcrumbItem className={cn("cursor-pointer", {
-                                    "text-primary": item.name == active
-                                })}>
-                                    {item.name}
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="last:hidden" />
-                            </Fragment>
-                        )
-                    })
-                }
-            </BreadcrumbList>
-        </Breadcrumb>
-    )
-}

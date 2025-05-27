@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -22,10 +21,10 @@ model User {
 model Resume {
   id         String          @id @default(uuid())
   title      String
-  user       User            @relation(fields: [userId], references: [id])
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId     String
   templateId String?
-  template   Template?       @relation(fields: [templateId], references: [id])
+  template   Template?       @relation(fields: [templateId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   sections   ResumeSection[]
   version    String? // Template version used
   createdAt  DateTime        @default(now())
@@ -33,13 +32,14 @@ model Resume {
 }
 
 model ResumeSection {
-  id       String @id @default(uuid())
-  resume   Resume @relation(fields: [resumeId], references: [id])
-  resumeId String
-  title    String
-  content  Json // Can store structured data (e.g., work experience)
-  order    Int
-  type     String
+  id        String  @id @default(uuid())
+  resume    Resume  @relation(fields: [resumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  resumeId  String
+  title     String
+  content   Json // Can store structured data (e.g., work experience)
+  order     Int
+  type      String
+  isVisible Boolean @default(true)
 }
 
 model Template {
@@ -57,7 +57,7 @@ model Template {
 
 model TemplateContributor {
   id         String   @id @default(uuid())
-  template   Template @relation(fields: [templateId], references: [id])
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   templateId String
   githubUser String // GitHub username
   avatarUrl  String?
