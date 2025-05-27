@@ -17,7 +17,7 @@ function ResumeList() {
     useEffect(() => {
         if (!userId || userId === '' || userId === null) return
         setLoading(true);
-        const response = GetAllResumesByUserId({ userId: userId }).then((res) => {
+        GetAllResumesByUserId({ userId: userId }).then((res) => {
             if (res.success) {
                 setResumes(res.data || []);
             }

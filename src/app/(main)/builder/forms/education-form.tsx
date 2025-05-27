@@ -21,7 +21,6 @@ function EducationForm() {
         }
     })
 
-
     return (
         <Form {...form}>
             <form className="max-w-[600px] my-10 mx-auto px-4">

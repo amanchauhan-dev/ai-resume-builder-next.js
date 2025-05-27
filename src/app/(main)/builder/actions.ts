@@ -1,8 +1,8 @@
 "use server"
 
-import { Resume } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { Resume as ResumeValidType } from "@/lib/validations"
+import { Resume } from "@prisma/client";
 
 const newResumeDefaultSections = [
     {
@@ -108,10 +108,6 @@ export const GetResumeById = async ({ resumeId }: { resumeId: string }): Promise
 
         if (!resume) {
             throw new Error("Resume not found");
-        }
-        const newResume = {
-            ...resume,
-            sections: resume.sections?.sort((a, b) => a.order - b.order)
         }
         return {
             success: true,

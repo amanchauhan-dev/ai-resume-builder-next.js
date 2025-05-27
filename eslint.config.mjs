@@ -15,11 +15,6 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },
-    "ignorePatterns": [
-      "node_modules/",
-      "prisma/",
-      "src/generated/",
-    ],
   },
 ];
 

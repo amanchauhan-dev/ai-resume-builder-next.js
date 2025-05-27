@@ -54,6 +54,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true)
     const [saveLoader, setSaveLoader] = useState<boolean>(false);
     const resumeId = params.get('resumeId');
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const [fresh, setFresh] = useState<number>(0)
     const save = () => setFresh(e => e + 1)
     const SaveResume = async () => {
@@ -65,10 +66,15 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     }
 
     useEffect(() => {
-        if (resumeId == null || !resumeId || resumeId == '') {
+        if (resumeId == null || !resumeId || resumeId == '' || firstLoad == true) {
+            if (firstLoad) {
+                setFirstLoad(false);
+                return
+            }
             return
         }
         SaveResume()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fresh])
 
     useEffect(() => {

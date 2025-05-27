@@ -1,4 +1,5 @@
 import { SVGIcon } from "@/lib/svg";
+import Image from "next/image";
 import React from "react";
 
 interface SvgIconProps {
@@ -9,8 +10,8 @@ interface SvgIconProps {
 const SvgIcon: React.FC<SvgIconProps> = ({ icon, className = "" }) => {
   if (icon.type === "dataURL") {
     return (
-      <img
-        src={icon.dataURL}
+      <Image
+        src={icon.dataURL || ''}
         alt={icon.key}
         className={`size-6 dark:invert ${className}`}
       />
