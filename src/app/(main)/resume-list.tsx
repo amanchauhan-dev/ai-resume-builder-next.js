@@ -21,9 +21,7 @@ function ResumeList() {
             if (res.success) {
                 setResumes(res.data || []);
             }
-        }).catch((err) => {
-            console.error("❌Error fetching resumes:", err);
-            setResumes([]);
+            console.log("Fetched resumes:", res.data);
         }).finally(() => {
             setLoading(false);
         })
