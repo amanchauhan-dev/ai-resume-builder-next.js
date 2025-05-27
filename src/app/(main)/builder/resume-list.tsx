@@ -1,19 +1,24 @@
 'use client'
 import { useAuth } from '@clerk/nextjs'
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
-import { DeleteResumeById, GetAllResumesByUserId } from './builder/actions'
+import React, { useEffect, useState } from 'react'
+import { DeleteResumeById, GetAllResumesByUserId } from './actions'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Resume } from '@/lib/validations'
 import { ProgressBarLink } from '@/providers/progress-bar-provider'
 import { Button } from '@/components/ui/button'
 import { Eye, Pen, Trash } from 'lucide-react'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import Loading from '@/components/loader'
 
 function ResumeList() {
     const { userId } = useAuth()
     const [loading, setLoading] = React.useState(false);
     const [resumes, setResumes] = React.useState<Resume[]>([]);
-    const [refresh, setRefresh] = React.useState<number>(0);
+
+    const handleRemoveOnDelete = (id: string) => {
+        setResumes((prev) => prev.filter((resume) => resume.id !== id));
+    }
+
     useEffect(() => {
         if (!userId || userId === '' || userId === null) return
         setLoading(true);
@@ -21,11 +26,10 @@ function ResumeList() {
             if (res.success) {
                 setResumes(res.data || []);
             }
-            console.log("Fetched resumes:", res.data);
         }).finally(() => {
             setLoading(false);
         })
-    }, [userId, refresh]);
+    }, [userId]);
 
     if (!userId || userId === '' || userId === null) {
         return (
@@ -43,14 +47,14 @@ function ResumeList() {
                     return (
                         <div key={e.id} className="h-54 w-40 bg-muted flex flex-col rounded-md overflow-hidden relative">
                             <div className='grow p-2'>
-                                <h1 className='text-center'>{e.title}</h1>
+                                <h1 className='text-center text-sm font-semibold'>{e.title}</h1>
                             </div>
                             <div className='flex justify-end gap-2 absolute bottom-2 right-2'>
                                 <ProgressBarLink href={'/builder?resumeId=' + e.id} className='cursor-pointer'>
                                     <Button variant={'outline'} size={'icon'} className='cursor-pointer'><Pen /></Button>
                                 </ProgressBarLink>
                                 <Button variant={"outline"} className='cursor-pointer' size={'icon'}><Eye /></Button>
-                                <AlertBox id={e.id || ''} setRefresh={setRefresh} />
+                                <AlertBox handleRemoveOnDelete={handleRemoveOnDelete} id={e.id || ''} />
                             </div>
                         </div>
                     )
@@ -64,20 +68,19 @@ export default ResumeList
 
 
 
-const AlertBox = ({ id, setRefresh }: { id: string, setRefresh: Dispatch<SetStateAction<number>> }) => {
+const AlertBox = ({ id, handleRemoveOnDelete }: { id: string, handleRemoveOnDelete: (id: string) => void }) => {
+    const [loading, setLoading] = useState(false)
     const handleDelete = async () => {
-        const response = await DeleteResumeById({ resumeId: id });
-        if (response.success == true) {
-            setRefresh(number => number + 1)
-        } else {
-            console.error("Failed to delete resume:", response.message);
-        }
+        setLoading(true);
+        await DeleteResumeById({ resumeId: id });
+        handleRemoveOnDelete(id);
+        setLoading(true);
     }
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="icon">
-                    <Trash />
+                <Button className='bg-red-600 hover:bg-red-500' disabled={loading} size="icon">
+                    {loading ? <Loading /> : <Trash />}
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -89,10 +92,10 @@ const AlertBox = ({ id, setRefresh }: { id: string, setRefresh: Dispatch<SetStat
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel asChild>
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="outline" autoFocus>Cancel</Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button variant="destructive" onClick={handleDelete}>Delete</Button>
+                        <Button className='bg-red-600 hover:bg-red-500' onClick={handleDelete}>Delete</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

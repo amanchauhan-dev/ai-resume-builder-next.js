@@ -109,6 +109,7 @@ export const GetResumeById = async ({ resumeId }: { resumeId: string }): Promise
         if (!resume) {
             throw new Error("Resume not found");
         }
+        resume.sections.sort((a, b) => a.order - b.order);
         return {
             success: true,
             message: "Resume retrieved successfully",
@@ -130,6 +131,9 @@ export const GetAllResumesByUserId = async ({ userId }: { userId: string }): Pro
             include: {
                 sections: true,
             },
+            orderBy: {
+                updatedAt: 'desc'
+            }
         });
 
         if (!resumes || resumes.length === 0) {

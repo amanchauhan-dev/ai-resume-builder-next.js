@@ -1,5 +1,5 @@
 
-export type SVGIcon = {
+export type SVGType = {
     key: string;
     name?: string;
     type: "svgPath" | "dataURL";
@@ -8,7 +8,7 @@ export type SVGIcon = {
     d?: string;
     dataURL?: string;
 }
-export const SVG: SVGIcon[] = [
+export const SVG: SVGType[] = [
     {
         key: "icon1",
         name: "Graduation Cap",

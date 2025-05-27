@@ -1,10 +1,11 @@
-import SVGPicker from "@/components/svg-picker"
+
+import ChooseIcon from "./choose-icon"
 
 function page() {
 
     return (
-        <div>
-            <SVGPicker />
+        <div className="px-4 md:px-16">
+            <ChooseIcon />
         </div>
     )
 }

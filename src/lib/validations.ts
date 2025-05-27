@@ -43,8 +43,8 @@ export const personalSectionSchema = resumeSectionSchema.extend({
                 dateOfBirth: z.string().optional(),
                 links: z.array(
                     z.object({
-                        label: z.string(),
-                        url: z.string().url(),
+                        label: z.string().optional(),
+                        url: z.string().url().optional(),
                         icon: z.string().optional(),
                     })).optional(),
             })

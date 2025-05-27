@@ -51,7 +51,7 @@ export function ProgressBar({
           <motion.div
             style={{ width }}
             exit={{ opacity: 0 }}
-            className={"absolute top-0 left-0 w-[100vw] !z-[999] " + className}
+            className={"sticky top-0 left-0 w-[100vw] !z-[999] " + className}
           />
         )}
       </AnimatePresence>

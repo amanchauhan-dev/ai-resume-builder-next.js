@@ -9,28 +9,37 @@ import { useState } from 'react'
 import { CreateNewResume } from './actions'
 import Loading from '@/components/loader'
 import { useAuth } from '@clerk/nextjs'
+import ResumeList from './resume-list'
 
 export default function ResumeBuilder() {
     const [createLoader, setCreateLoader] = useState(false);
     const { userId } = useAuth()
     const params = useSearchParams();
     const resumeId = params.get('resumeId');
+    const searchParams = useSearchParams()
     if (resumeId === null || resumeId === undefined || resumeId === '') {
         const createNewResume = async () => {
             setCreateLoader(true);
-            const response = await CreateNewResume({ userId: userId || '' });
-            console.log("🚀 New resume creation response:", response);
+            const res = await CreateNewResume({ userId: userId || '' });
+            if (res.data?.id) {
+                const params = new URLSearchParams(searchParams)
+                params.set('resumeId', res.data.id);
+                window.history.replaceState(null, '', `?${params.toString()}`);
+            }
             setCreateLoader(false);
         }
         return (
-            <div className="flex flex-col items-center justify-center h-full mt-10">
-                <Button onClick={createNewResume} disabled={createLoader}>
+            <div className="flex flex-col gap-5  h-full mt-10 px-4 md:px-16">
+                <Button onClick={createNewResume} className='w-fit mx-auto' disabled={createLoader}>
                     {createLoader ? <Loading /> :
                         <>
                             <Plus /> Create New Resume
                         </>
                     }
                 </Button>
+                <div>
+                    <ResumeList />
+                </div>
             </div>
         )
     }

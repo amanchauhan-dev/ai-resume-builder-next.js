@@ -19,7 +19,7 @@ function SummaryForm() {
     const ResumeSection = resume.sections?.find(
         (e) => e.type === "summary" && e.id === step?.id
     ) as SummarySection | undefined
-    
+
     // 1. Define your form.
     const form = useForm<SummarySection>({
         resolver: zodResolver(summarySectionSchema),
@@ -39,8 +39,9 @@ function SummaryForm() {
     })
 
 
+
     const onSubmit = (section: SummarySection) => {
-        
+
         setResume((prev) => {
             return {
                 ...prev,

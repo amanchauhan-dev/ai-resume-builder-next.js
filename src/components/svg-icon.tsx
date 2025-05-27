@@ -1,19 +1,22 @@
-import { SVGIcon } from "@/lib/svg";
+import { SVGType } from "@/lib/svg";
 import Image from "next/image";
 import React from "react";
 
 interface SvgIconProps {
-  icon: SVGIcon;
+  icon: SVGType;
   className?: string;
+  size?: number;
 }
 
-const SvgIcon: React.FC<SvgIconProps> = ({ icon, className = "" }) => {
+const SVGIcon: React.FC<SvgIconProps> = ({ icon, className = "", size = 24 }) => {
   if (icon.type === "dataURL") {
     return (
       <Image
         src={icon.dataURL || ''}
         alt={icon.key}
-        className={`size-6 dark:invert ${className}`}
+        width={size}
+        height={size}
+        className={`dark:invert ${className}`}
       />
     );
   }
@@ -32,5 +35,5 @@ const SvgIcon: React.FC<SvgIconProps> = ({ icon, className = "" }) => {
   );
 };
 
-export default SvgIcon;
+export default SVGIcon;
 
