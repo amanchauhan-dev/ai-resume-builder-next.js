@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useResume } from "@/hooks/use-resume";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -37,7 +36,7 @@ function GeneralResumeDetailForm() {
     }
 
     return (
-        <form className="max-w-[600px] my-10 mx-auto px-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="max-w-[600px] my-10 mx-auto " onSubmit={handleSubmit(onSubmit)}>
             <h1 className="text-xl font-semibold text-center">General Details</h1>
             <p className="text-center text-sm text-muted-foreground">
                 These are the general details for your resume. These details will not be reflected on your resume.
@@ -58,7 +57,7 @@ function GeneralResumeDetailForm() {
                 <div className="space-y-2">
                     <Button className="w-full" disabled={loading} type="submit">
                         {loading ? "Saving..." : <>
-                            SAVE & NEXT <ArrowRight />
+                            SAVE
                         </>}
                     </Button>
                 </div>

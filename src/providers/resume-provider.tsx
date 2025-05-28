@@ -19,6 +19,7 @@ export const initialResume: Resume = {
 export type StepType = {
     id: string;
     type: string;
+
 }
 
 export interface ResumeContextProps {
@@ -31,6 +32,7 @@ export interface ResumeContextProps {
     save: () => void;
     loading: boolean,
     setLoading: Dispatch<SetStateAction<boolean>>,
+    handleStepChange: (step: StepType) => void
 }
 
 export const ResumeContext = createContext<ResumeContextProps>({
@@ -43,6 +45,7 @@ export const ResumeContext = createContext<ResumeContextProps>({
     save: () => { },
     loading: false,
     setLoading: () => { },
+    handleStepChange: () => { }
 })
 
 
@@ -50,13 +53,17 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     const params = useSearchParams();
     const [resume, setResume] = useState<Resume>(initialResume);
     const [sections, setSections] = useState<ResumeSection[]>([])
-    const [step, setStep] = useState<StepType>({ id: params.get('step-id') || '', type: params.get('step-type') || '' })
+    const [step, setStep] = useState<StepType>({
+        id: params.get('step-id') || '', type: params.get('step-type') || ''
+    })
     const [loading, setLoading] = useState(true)
     const [saveLoader, setSaveLoader] = useState<boolean>(false);
     const resumeId = params.get('resumeId');
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const [fresh, setFresh] = useState<number>(0)
     const save = () => setFresh(e => e + 1)
+
+
     const SaveResume = async () => {
         setSaveLoader(true);
         const response = await UpdateResumeById({ resumeId: resume.id || '', data: resume });
@@ -105,9 +112,23 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
         }) : []
         setSections(data)
     }, [resume])
+
+    // handle step change
+
+    const handleStepChange = ({ id, type, }: StepType) => {
+        setStep({ id: id, type: type })
+        const newSearchParams = new URLSearchParams(params)
+        newSearchParams.set('step-id', id)
+        newSearchParams.set('step-type', type)
+        window.history.pushState(null, '', `?${newSearchParams.toString()}`)
+    }
+
+
+
     if (loading) {
         return <Skeleton className=' h-96 mx-4 md:mx-16 mt-10' />
     }
+
 
     return (
         <ResumeContext.Provider
@@ -121,7 +142,8 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
                     setSections: setSections,
                     save: save,
                     loading: saveLoader,
-                    setLoading: setSaveLoader
+                    setLoading: setSaveLoader,
+                    handleStepChange
                 }
             }>
             {children}

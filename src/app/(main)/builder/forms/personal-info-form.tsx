@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import DNDWrapper from "@/components/dnd-wrapper"
 import {
     Form,
     FormControl,
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { PersonalSection, personalSectionSchema } from "@/lib/validations"
-import { ArrowRight, Calendar, LocationEdit, Mail, Phone, Trash, User2 } from "lucide-react"
+import { Calendar, GripVertical, LocationEdit, Mail, Phone, Trash, User2 } from "lucide-react"
 import { useResume } from "@/hooks/use-resume"
 import SVGPicker from "@/components/svg-picker"
 import { useState } from "react"
@@ -90,7 +91,7 @@ function PersonalInfoForm() {
     }
     return (
         <Form {...form}>
-            <form className="max-w-[600px] my-10 mx-auto px-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="max-w-[600px] my-10 mx-auto" onSubmit={form.handleSubmit(onSubmit)}>
                 <h1 className="text-xl font-semibold text-center">Personal Information</h1>
                 <p className="text-center text-sm text-muted-foreground">
                     This area will cover your personal information like Name, Email, Location, Image, and Age etc.
@@ -202,20 +203,33 @@ function PersonalInfoForm() {
                     </div>
                     {/* links */}
                     <div className="">
-                        {links.length > 0 && links.map((link, index) => <ShowLinks
-                            handleRemoveLink={handleRemoveLink}
-                            iconIndex={link.icons}
-                            url={link.url || ""}
-                            label={link.label || ""}
-                            index={index}
-                            key={index} />)}
+                        <DNDWrapper
+                            items={links}
+                            onChange={setLinks}
+                            getId={(items) => items.url || ''}
+                            renderItem={(item, index, dragHandleProps) => (
+                                <ShowLinks
+                                    Dragger={
+                                        <>
+                                            <Button className="cursor-grab" size={'icon'} {...dragHandleProps.attributes}
+                                                {...dragHandleProps.listeners}><GripVertical /></Button>
+                                        </>
+                                    }
+                                    handleRemoveLink={handleRemoveLink}
+                                    iconIndex={item.icons}
+                                    url={item.url || ""}
+                                    label={item.label || ""}
+                                    index={index}
+                                    key={index} />
+                            )}
+                        />
                         <h1 className="font-semibold mt-4">Add Links</h1>
-                        <AddLinkForm setLinks={setLinks} />
+                        <AddLinkForm setLinks={setLinks} Links={links} />
                     </div>
                     <div className="space-y-2">
                         <Button className="w-full" type="submit" disabled={loading}>
                             {loading ? "Saving..." : <>
-                                SAVE & NEXT <ArrowRight />
+                                SAVE
                             </>}
                         </Button>
                     </div>
@@ -232,9 +246,9 @@ function PersonalInfoForm() {
 export default PersonalInfoForm
 
 
-const ShowLinks = ({ iconIndex, url, label, handleRemoveLink, index }: { iconIndex?: number; label: string; index: number; url: string, handleRemoveLink: (index: number) => void }) => {
+const ShowLinks = ({ iconIndex, url, label, handleRemoveLink, index, Dragger }: { iconIndex?: number; label: string; index: number; url: string, handleRemoveLink: (index: number) => void; Dragger?: React.ReactNode }) => {
     return (
-        <div className="grid grid-cols-[40px_auto_40px] gap-2 border rounded mb-1 items-center p-1">
+        <div className="grid grid-cols-[40px_auto_80px] gap-2 border rounded mb-1 items-center p-1">
             <Button size={"icon"} variant={'ghost'} type="button">
                 {iconIndex && !isNaN(iconIndex) ? <SVGIcon size={16} icon={SVG[iconIndex]} /> : ""}
             </Button>
@@ -242,21 +256,31 @@ const ShowLinks = ({ iconIndex, url, label, handleRemoveLink, index }: { iconInd
                 <span className="text-sm font-semibold">{label}</span>
                 <span className="text-[10px]">{url}</span>
             </div>
-            <Button onClick={() => handleRemoveLink(index)} size={'icon'} className="bg-red-600 hover:bg-red-500" type="button">
-                <Trash />
-            </Button>
+            <div className="flex gap-1 items-center">
+                {Dragger}
+                <Button onClick={() => handleRemoveLink(index)} size={'icon'} className="bg-red-600 hover:bg-red-500" type="button">
+                    <Trash />
+                </Button>
+            </div>
         </div>
     )
 }
 
 
 
-const AddLinkForm = ({ setLinks, }: { setLinks: React.Dispatch<React.SetStateAction<LinksType[]>> }) => {
+const AddLinkForm = ({ setLinks, Links }: { setLinks: React.Dispatch<React.SetStateAction<LinksType[]>>; Links: LinksType[] }) => {
     const [iconIndex, setIconIndex] = useState<number>();
     const [label, setLabel] = useState<string>("");
+    const [linkError, setLinkError] = useState<string>('')
     const [url, setUrl] = useState<string>("");
     const onAddLink = () => {
         if (label.length == 0 && url.length == 0) return;
+        const urls = Links.map(e => e.url)
+        if (urls.includes(url)) {
+            setLinkError("Link already exists")
+            return
+        }
+        setLinkError('')
         setLinks((prev) => [...prev, { icons: iconIndex, label, url }]);
         setIconIndex(undefined);
         setLabel("");
@@ -271,6 +295,7 @@ const AddLinkForm = ({ setLinks, }: { setLinks: React.Dispatch<React.SetStateAct
                     <Input value={label} onChange={(e) => setLabel(e.target.value)} type="text" placeholder="Label" />
                 </div>
                 <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" type="text" />
+                <p className="text-red-600 text-sm">{linkError}</p>
             </div>
             <div className="mt-auto">
                 <Button type="button" onClick={onAddLink} >Add</Button>

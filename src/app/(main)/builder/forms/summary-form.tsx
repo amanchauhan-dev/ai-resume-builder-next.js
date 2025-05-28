@@ -1,4 +1,5 @@
-"use client"
+'use client'
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -15,17 +16,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { useResume } from "@/hooks/use-resume"
 
 function SummaryForm() {
-    const { resume, setResume, step } = useResume()
+    const { resume, setResume, step, setLoading, save, loading } = useResume()
     const ResumeSection = resume.sections?.find(
         (e) => e.type === "summary" && e.id === step?.id
     ) as SummarySection | undefined
 
-    // 1. Define your form.
     const form = useForm<SummarySection>({
         resolver: zodResolver(summarySectionSchema),
         defaultValues: {
             id: ResumeSection?.id || "",
-            title: ResumeSection?.title || "Professional Summary",
+            title: ResumeSection?.title || "Summary",
             type: ResumeSection?.type || "summary",
             content: {
                 description: ResumeSection?.content?.description || "",
@@ -35,13 +35,13 @@ function SummaryForm() {
                     },
                 ],
             },
-        }
-    })
+        },
+    });
 
 
-
+    // 1. Define your form.
     const onSubmit = (section: SummarySection) => {
-
+        setLoading(true)
         setResume((prev) => {
             return {
                 ...prev,
@@ -65,12 +65,12 @@ function SummaryForm() {
                 }),
             }
         })
-
+        save()
     }
 
     return (
         <Form {...form}>
-            <form className="max-w-[600px] my-10 mx-auto px-4" onSubmit={(form.handleSubmit(onSubmit))}>
+            <form className="max-w-[600px] my-10 mx-auto" onSubmit={(form.handleSubmit(onSubmit))}>
                 <h1 className="text-xl font-semibold text-center">Professional Summary</h1>
                 <p className="text-center text-sm text-muted-foreground">
                     Write a brief summary of your professional background and career goals.
@@ -94,8 +94,10 @@ function SummaryForm() {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Button className="w-full">
-                            SAVE
+                        <Button className="w-full" type="submit" disabled={loading}>
+                            {loading ? "Saving..." : <>
+                                SAVE
+                            </>}
                         </Button>
                     </div>
                 </div>

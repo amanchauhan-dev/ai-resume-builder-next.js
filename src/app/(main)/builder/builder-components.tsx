@@ -1,9 +1,8 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { useResume } from "@/hooks/use-resume"
 import { cn } from "@/lib/utils"
 import { ProgressBarLink } from "@/providers/progress-bar-provider"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 
@@ -61,20 +60,18 @@ export const BuilderHeader = () => {
 }
 
 export const BuilderFooter = () => {
-    const { loading, save } = useResume()
     return (
         <footer className="w-full border-t px-3 py-4 bg-background z-30">
             <div className="max-w-7xl mx-auto flex flex-warp justify-between gap-3">
-                <div className="flex items-center gap-3">
-                    <Button size={'sm'} variant={'secondary'}>Previous</Button>
-                    <Button size={'sm'} >Next</Button>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    Save your resume before jumping to the next step.
                 </div>
                 <div className="flex items-center gap-3">
                     <Button size={'sm'} variant={'secondary'} asChild>
                         <ProgressBarLink href={'/'}>Close</ProgressBarLink>
                     </Button>
-                    <Button disabled={loading} onClick={save}>
-                        {loading ? "Saving..." : 'SAVE'}
+                    <Button >
+                        Preview 📄
                     </Button>
                 </div>
             </div>

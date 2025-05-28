@@ -67,43 +67,49 @@ export const summarySectionSchema = resumeSectionSchema.extend({
 });
 export type SummarySection = z.infer<typeof summarySectionSchema>;
 
+export const experienceItemSchema = z.object({
+    id: z.string(),
+    company: z.string().min(1, "Required"),
+    position: z.string().min(1, "Required"),
+    startDate: z.string().min(1, "Required"),
+    endDate: z.string().optional(),
+    location: z.string().optional(),
+    description: z.string().optional(),
+    reference: z.object({
+        name: z.string().optional(),
+        position: z.string().optional(),
+        phone: z.string().optional(),
+        email: z.string().optional()
+    }).optional()
+})
 
+export type ExperienceItem = z.infer<typeof experienceItemSchema>;
 export const experienceSectionSchema = resumeSectionSchema.extend({
     content: z.object({
         description: z.string().optional(),
         items: z.array(
             z.object({
-                experiences: z.array(z.object({
-                    company: z.string(),
-                    position: z.string(),
-                    startDate: z.string(),
-                    endDate: z.string().optional(),
-                    location: z.string().optional(),
-                    description: z.string().optional(),
-                    reference: z.object({
-                        name: z.string(),
-                        position: z.string().optional(),
-                        phone: z.string(),
-                        email: z.string().optional()
-                    })
-                })),
+                experiences: z.array(experienceItemSchema),
             })
         )
     })
 });
 export type ExperienceSection = z.infer<typeof experienceSectionSchema>;
 
+export const skillItemSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1, 'Required'),
+    proficiency: z.enum(["beginner", "intermediate", "advanced", "expert", 'none']),
+    description: z.string().optional(),
+})
+export type SkillItem = z.infer<typeof skillItemSchema>;
 export const skillsSectionSchema = resumeSectionSchema.extend({
     content: z.object({
         description: z.string().optional(),
         items: z.array(
             z.object({
                 skills: z.array(
-                    z.object({
-                        name: z.string(),
-                        proficiency: z.enum(["beginner", "intermediate", "advanced", "expert"]),
-                        description: z.string().optional(),
-                    })
+                    skillItemSchema
                 ).optional(),
                 showDescription: z.boolean().optional(),
                 showProficiency: z.boolean().optional(),
@@ -130,15 +136,19 @@ export const projectsSectionSchema = resumeSectionSchema.extend({
 });
 export type ProjectsSection = z.infer<typeof projectsSectionSchema>;
 
+export const languageItemSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1,'Required'),
+    proficiency: z.enum(["basic", "intermediate", "fluent", "native","none"]),
+})
+export type LanguageItem = z.infer<typeof languageItemSchema>
+
 export const languagesSectionSchema = resumeSectionSchema.extend({
     content: z.object({
         description: z.string().optional(),
         items: z.array(
             z.object({
-                languages: z.array(z.object({
-                    name: z.string(),
-                    proficiency: z.enum(["basic", "intermediate", "fluent", "native"]),
-                })),
+                languages: z.array(languageItemSchema),
                 showProficiency: z.boolean().optional(),
             })
         )
@@ -158,20 +168,24 @@ export const declarationSectionSchema = resumeSectionSchema.extend({
 });
 export type DeclarationSection = z.infer<typeof declarationSectionSchema>;
 
+export const educationItemSchema = z.object({
+    id: z.string(),
+    institution: z.string().min(1, "Required"),
+    description: z.string().optional(),
+    location: z.string().optional(),
+    degree: z.string().min(1, "Required"),
+    fieldOfStudy: z.string().optional(),
+    startYear: z.string().optional(),
+    endYear: z.string().optional(),
+})
+
+export type EducationItem = z.infer<typeof educationItemSchema>;
 export const educationSectionSchema = resumeSectionSchema.extend({
     content: z.object({
         description: z.string().optional(),
         items: z.array(
             z.object({
-                education: z.array(z.object({
-                    institution: z.string(),
-                    description: z.string(),
-                    location: z.string().optional(),
-                    degree: z.string(),
-                    fieldOfStudy: z.string().optional(),
-                    startYear: z.string(),
-                    endYear: z.string().optional(),
-                })),
+                educations: z.array(educationItemSchema),
             })
         )
     })
