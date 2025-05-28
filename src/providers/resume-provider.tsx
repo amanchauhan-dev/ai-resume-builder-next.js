@@ -13,7 +13,8 @@ export const initialResume: Resume = {
     sections: [],
     version: '',
     createAt: null,
-    updatedAt: null
+    updatedAt: null,
+
 }
 
 export type StepType = {
@@ -32,7 +33,10 @@ export interface ResumeContextProps {
     save: () => void;
     loading: boolean,
     setLoading: Dispatch<SetStateAction<boolean>>,
-    handleStepChange: (step: StepType) => void
+    handleStepChange: (step: StepType) => void,
+    setResumeId: Dispatch<SetStateAction<string | null>>
+    resumeId: string | null,
+    loadingResume: boolean,
 }
 
 export const ResumeContext = createContext<ResumeContextProps>({
@@ -45,20 +49,25 @@ export const ResumeContext = createContext<ResumeContextProps>({
     save: () => { },
     loading: false,
     setLoading: () => { },
-    handleStepChange: () => { }
+    handleStepChange: () => { },
+    setResumeId: () => { },
+    resumeId: null,
+    loadingResume: true
 })
 
 
 export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     const params = useSearchParams();
     const [resume, setResume] = useState<Resume>(initialResume);
+    const [resumeId, setResumeId] = useState<string | null>(null)
     const [sections, setSections] = useState<ResumeSection[]>([])
     const [step, setStep] = useState<StepType>({
         id: params.get('step-id') || '', type: params.get('step-type') || ''
     })
+
     const [loading, setLoading] = useState(true)
+    const [loadingResume, setLoadingResume] = useState<boolean>(true);
     const [saveLoader, setSaveLoader] = useState<boolean>(false);
-    const resumeId = params.get('resumeId');
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const [fresh, setFresh] = useState<number>(0)
     const save = () => setFresh(e => e + 1)
@@ -66,9 +75,8 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
 
     const SaveResume = async () => {
         setSaveLoader(true);
-        const response = await UpdateResumeById({ resumeId: resume.id || '', data: resume });
+        await UpdateResumeById({ resumeId: resume.id || '', data: resume });
         setSaveLoader(false);
-        console.log(response);
 
     }
 
@@ -89,6 +97,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false);
             return
         }
+        setLoadingResume(true)
         GetResumeById({ resumeId: resumeId }).then(res => {
             if (res.data && res.success == true) {
                 setResume(res.data)
@@ -98,6 +107,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
             }
         }).finally(() => {
             setLoading(false)
+            setLoadingResume(false)
         })
     }, [resumeId])
 
@@ -143,7 +153,10 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
                     save: save,
                     loading: saveLoader,
                     setLoading: setSaveLoader,
-                    handleStepChange
+                    handleStepChange,
+                    setResumeId,
+                    resumeId,
+                    loadingResume
                 }
             }>
             {children}

@@ -1,23 +1,16 @@
-import { Metadata } from "next";
-import ResumeBuilder from "./resume-builder";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata } from 'next'
+import React from 'react'
+import ResumeList from './resume-list'
 
 export const metadata: Metadata = {
     title: "Builder"
 }
 function page() {
     return (
-        <Suspense fallback={<Skeleton className="h-96 w-full mx-4 md:mx-16 my-4" />}>
-            <div className="flex grow flex-col">
-                <ResumeBuilder />
-            </div>
-        </Suspense>
+        <div className='px-4 md:px-16 my-5'>
+            <ResumeList />
+        </div>
     )
 }
 
 export default page
-
-
-
-

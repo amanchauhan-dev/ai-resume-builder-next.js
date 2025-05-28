@@ -28,7 +28,6 @@ function BuilderContent() {
                     <ScrollArea className='h-[100%] px-2 sm:px-8 md:px-12 pb-5'>
                         <NavigationThroughForms />
                         <div className='px-2'>
-
                             {FormComponent && <FormComponent />}
                         </div>
                     </ScrollArea>

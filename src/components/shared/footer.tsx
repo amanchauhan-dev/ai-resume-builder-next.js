@@ -26,7 +26,7 @@ export default function Footer() {
     const path = usePathname()
     return (
         <footer className={cn("bg-background border-t mt-auto", {
-            "hidden": path == '/builder'
+            "hidden": path.startsWith('/builder')
         })}>
             <div className="container px-4 py-12 md:py-16">
                 <div className="grid grid-cols-1 items-center md:grid-cols-4 gap-8">
