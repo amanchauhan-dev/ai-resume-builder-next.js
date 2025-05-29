@@ -37,6 +37,7 @@ export interface ResumeContextProps {
     setResumeId: Dispatch<SetStateAction<string | null>>
     resumeId: string | null,
     loadingResume: boolean,
+
 }
 
 export const ResumeContext = createContext<ResumeContextProps>({
@@ -64,6 +65,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     const [step, setStep] = useState<StepType>({
         id: params.get('step-id') || '', type: params.get('step-type') || ''
     })
+  
 
     const [loading, setLoading] = useState(true)
     const [loadingResume, setLoadingResume] = useState<boolean>(true);
@@ -71,7 +73,6 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const [fresh, setFresh] = useState<number>(0)
     const save = () => setFresh(e => e + 1)
-
 
     const SaveResume = async () => {
         setSaveLoader(true);
@@ -156,7 +157,7 @@ export const ResumeProvider = ({ children }: { children: ReactNode }) => {
                     handleStepChange,
                     setResumeId,
                     resumeId,
-                    loadingResume
+                    loadingResume,
                 }
             }>
             {children}

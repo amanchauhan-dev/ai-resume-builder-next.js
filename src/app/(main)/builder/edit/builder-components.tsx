@@ -61,7 +61,7 @@ export const BuilderHeader = () => {
 }
 
 export const BuilderFooter = () => {
-    const { save, loading } = useResume()
+    const { save, loading, resumeId } = useResume()
     return (
         <footer className="w-full border-t px-3 py-4 bg-background z-30">
             <div className="max-w-7xl mx-auto flex flex-warp justify-between gap-3">
@@ -75,8 +75,10 @@ export const BuilderFooter = () => {
                     <Button disabled={loading} onClick={save}>
                         {loading ? 'Saving...' : "SAVE"}
                     </Button>
-                    <Button disabled={loading}>
-                        Preview 📄
+                    <Button asChild>
+                        <ProgressBarLink href={'/preview/' + resumeId}>
+                            Preview 📄
+                        </ProgressBarLink>
                     </Button>
                 </div>
             </div>

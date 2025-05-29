@@ -25,7 +25,7 @@ export default function Footer() {
     const { setTheme } = useTheme()
     const path = usePathname()
     return (
-        <footer className={cn("bg-background border-t mt-auto", {
+        <footer className={cn("bg-background border-t mt-auto hide-resume", {
             "hidden": path.startsWith('/builder')
         })}>
             <div className="container px-4 py-12 md:py-16">

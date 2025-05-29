@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const ResumeStylesSchema = z.object({
+    fontFamily: z.string().optional(),
+    theme: z.string().optional(),
+    fontSize: z.number().optional(),
+    padding: z.number().optional(),
+}).optional()
+
+export type ResumeStyles = z.infer<typeof ResumeStylesSchema>
+
 
 export const resumeSectionContentSchema = z.object({
     description: z.string().optional(),
@@ -22,6 +31,7 @@ export const resumeSchema = z.object({
     templateId: z.string().optional().nullable(),
     sections: z.array(resumeSectionSchema).optional(),
     version: z.string().optional().nullable(),
+    style: z.any().optional(),
     createAt: z.date().optional().nullable(),
     updatedAt: z.date().optional().nullable(),
 })
@@ -138,8 +148,8 @@ export type ProjectsSection = z.infer<typeof projectsSectionSchema>;
 
 export const languageItemSchema = z.object({
     id: z.string(),
-    name: z.string().min(1,'Required'),
-    proficiency: z.enum(["basic", "intermediate", "fluent", "native","none"]),
+    name: z.string().min(1, 'Required'),
+    proficiency: z.enum(["basic", "intermediate", "fluent", "native", "none"]),
 })
 export type LanguageItem = z.infer<typeof languageItemSchema>
 

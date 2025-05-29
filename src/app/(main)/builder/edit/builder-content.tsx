@@ -12,6 +12,7 @@ import { FormRegister } from './form-register'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import ResumePreview from '@/components/ResumePreview'
 
 function BuilderContent() {
     const { step, resume } = useResume()
@@ -32,13 +33,8 @@ function BuilderContent() {
                         </div>
                     </ScrollArea>
                 </div>
-                <div className="max-lg:hidden flex-auto bg-secondary p-5 max-w-[500px]">
-                    <div className="bg-white text-[10px] text-black border shadow-xl w-full  h-full mx-auto relative overflow-auto">
-                        <p className="absolute -top-[16px] left-0 text-secondary-foreground text-[10px]">My-Resume</p>
-                        <pre className='text-wrap'>
-                            {JSON.stringify(resume, null, 2)}
-                        </pre>
-                    </div>
+                <div className="max-lg:hidden flex-auto bg-secondary p-5 max-w-[500px] overflow-auto">
+                    <ResumePreview resumeData={resume} />
                 </div>
             </div>
         </main>

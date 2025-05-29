@@ -20,7 +20,7 @@ export default function Header() {
         console.log(userId);
     }, [userId])
     return (
-        <header className="px-4 md:px-16 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="px-4 md:px-16 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 hide-resume">
             <div className="container flex h-[55px] items-center justify-between">
                 {/* Logo and Main Navigation */}
                 <div className="flex items-center space-x-6">
